@@ -94,6 +94,16 @@ public class Node {
         checked = true;
     }
 
+    public void resetNode() {
+        rec.setFill(Color.WHITE);
+        text.setText("");
+        start = false;
+        goal = false;
+        solid = false;
+        open = false;
+        checked = false;
+    }
+
     /**
      * Sets a node green to show the path the algorithm ended on
      */

@@ -32,7 +32,46 @@ public class Controller {
         field.setFocusTraversable(true);
 
         //Add all the nodes to the window
-        setBoard();
+        goalReached = false;
+        int col = 0;
+        int row = 0;
+        while (col < maxColumns && row < maxRows) {
+            Node node = new Node(col, row, nodeSize);
+            nodes[col][row] = node;
+            field.getChildren().addAll(node.rec, node.text);
+
+            col++;
+            if (col == maxColumns) {
+                col = 0;
+                row++;
+            }
+        }
+        setStartNode(3, 6);
+        setGoalNode(11, 3);
+
+        setSolidNode(10, 2);
+        setSolidNode(10, 3);
+        setSolidNode(10, 4);
+        setSolidNode(10, 5);
+        setSolidNode(10, 6);
+        setSolidNode(10, 7);
+        setSolidNode(2, 2);
+        setSolidNode(3, 2);
+        setSolidNode(4, 2);
+        setSolidNode(5, 2);
+        setSolidNode(6, 2);
+        setSolidNode(7, 2);
+        setSolidNode(8, 2);
+        setSolidNode(9, 2);
+        setSolidNode(7, 7);
+        setSolidNode(8, 7);
+        setSolidNode(9, 7);
+        setSolidNode(10, 7);
+        setSolidNode(11, 7);
+        setSolidNode(12, 7);
+        setSolidNode(6, 1);
+        setSolidNode(6, 0);
+        setCosts();
     }
     private void setStartNode(int col, int row) {
         nodes[col][row].setAsStart();
@@ -211,22 +250,20 @@ public class Controller {
         }
     }
     private void setBoard() {
-        //Checks if the board has been set already and if it has clears
-        //the node lists so that it can be regenerated
-        if (nodes[0][0] != null) {
-            nodes = new Node[maxColumns][maxRows];
-            openList = new ArrayList<>();
-        }
+//        //Checks if the board has been set already and if it has clears
+//        //the node lists so that it can be regenerated
+//        if (nodes[0][0] != null) {
+//            nodes = new Node[maxColumns][maxRows];
+//            openList = new ArrayList<>();
+//        }
 
         //Regenerates all the nodes on the board
         goalReached = false;
+        openList.clear();
         int col = 0;
         int row = 0;
         while (col < maxColumns && row < maxRows) {
-            Node node = new Node(col, row, nodeSize);
-            nodes[col][row] = node;
-            field.getChildren().addAll(node.rec, node.text);
-
+            nodes[col][row].resetNode();
             col++;
             if (col == maxColumns) {
                 col = 0;
