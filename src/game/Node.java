@@ -1,4 +1,4 @@
-package astar_example;
+package game;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -12,7 +12,7 @@ public class Node {
     public final int col, row;
 
     //Flags for the different node states
-    public boolean start, goal, solid;
+    public boolean start, goal, solid, hasEnemy;
 
     //Flags used for the A* algorithm
     public boolean open, checked;
@@ -23,7 +23,7 @@ public class Node {
     public Rectangle rec;
     public Text text;
 
-    public Node(int col, int row, int size) {
+    public Node(int col, int row, double size) {
         this.col = col;
         this.row = row;
         rec = new Rectangle(col * size + 0.5, row * size + 0.5, 39, 39);
@@ -39,13 +39,9 @@ public class Node {
     }
 
     private void onClick(MouseEvent e) {
-//        Rectangle r = (Rectangle) e.getSource();
-//        r.setFill(Color.ORANGE);
-//        r.setStrokeWidth(10);
         if (solid) {
             solid = false;
             rec.setFill(Color.WHITE);
-            text.setText("G:" + gCost + " F:" + fCost);
         } else {
             setAsSolid();
         }
@@ -55,8 +51,6 @@ public class Node {
      * Sets a node as the starting node
      */
     public void setAsStart() {
-        rec.setFill(Color.AQUA);
-        text.setText("Start");
         start = true;
     }
 
@@ -64,8 +58,6 @@ public class Node {
      * Sets a node as the goal node
      */
     public void setAsGoal() {
-        rec.setFill(Color.YELLOW);
-        text.setText("Goal");
         goal = true;
     }
 
