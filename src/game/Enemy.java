@@ -1,6 +1,7 @@
 package game;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -59,8 +60,9 @@ public class Enemy extends Entity {
     }
 
     @Override
-    public void die() {
-
+    public void die(Pane field) {
+        nodes[col][row].hasEnemy = false;
+        field.getChildren().remove(circle);
     }
 
     public Node autoSearch() {

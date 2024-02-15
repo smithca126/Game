@@ -130,8 +130,7 @@ public class DungeonGenerator {
             if (enemy.health > 0) {
                 enemy.move(player.col, player.row, player);
             } else {
-                grid[enemy.col][enemy.row].hasEnemy = false;
-                field.getChildren().remove(enemy.circle);
+                enemy.die(field);
                 removed = enemy;
             }
         }

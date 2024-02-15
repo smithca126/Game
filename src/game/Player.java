@@ -1,11 +1,13 @@
 package game;
 
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 
 public class Player extends Entity {
-    public Player(int col, int row, double size) {
+    private Pane field;
+    public Player(int col, int row, double size, Pane field) {
         this.col = col;
         this.row = row;
 
@@ -16,7 +18,7 @@ public class Player extends Entity {
     }
 
     @Override
-    public void die() {
+    public void die(Pane field) {
 
     }
 
@@ -31,7 +33,6 @@ public class Player extends Entity {
                 target.health = target.health - 4;
                 notifyObservers(null, "Enemy attacked for 4hp\n");
                 if (target.health < 0) {
-                    target.die();
                     notifyObservers(null, "An enemy has been defeated!\n");
                 }
             }
