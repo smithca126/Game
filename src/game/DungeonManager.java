@@ -15,9 +15,9 @@ import observer_pattern.SelectedEnemyObserver;
 
 import java.util.ArrayList;
 
-public class DungeonGenerator {
-    private int nodeSize;
-    private Pane field;
+public class DungeonManager {
+    private final int nodeSize;
+    private final Pane field;
     public Player player;
     ArrayList<Entity> enemies = new ArrayList<>();
     private Timeline timeline;
@@ -25,7 +25,7 @@ public class DungeonGenerator {
 
     private Node[][] grid;
 
-    public DungeonGenerator(int nodeSize, Pane field) {
+    public DungeonManager(int nodeSize, Pane field) {
         this.nodeSize = nodeSize;
         this.field = field;
     }
@@ -35,9 +35,9 @@ public class DungeonGenerator {
         createFrame(col, row);
         addWalls();
 
-        addPlayer(eventBox, playerHealthDisplay, playerArmorDisplay);
+        addPlayer(eventBox);
 
-        addEnemies(eventBox, enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane);
+        addEnemies(1, eventBox, enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane, playerHealthDisplay, playerArmorDisplay);
 
     }
 
@@ -74,29 +74,43 @@ public class DungeonGenerator {
         grid[col][row].setAsSolid();
     }
 
-    private void addPlayer(TextArea eventBox, Text playerHealthDisplay, Text playerArmorDisplay) {
+    private void addPlayer(TextArea eventBox) {
         //Spawn the player
         player = new Player(3, 6, nodeSize);
         field.getChildren().add(player.circle);
         attachObserverToPlayer(new EventBoxObserver(eventBox));
-        attachObserverToPlayer(new PlayerStatObserver(playerHealthDisplay, playerArmorDisplay));
         player.notifyObservers(player, null);
+    }
+
+    private void addEnemies(int num, TextArea eventBox, Text enemyHealthDisplay, Text enemyArmorDisplay,
+                            Pane selectedEnemyPane, Text playerHealthDisplay, Text playerArmorDisplay) {
+        for (int i = 0; i < num; i++) {
+            Enemy enemy = new Enemy(6, i + 6, nodeSize, grid, grid[player.col][player.row], Color.RED);
+            field.getChildren().add(enemy.circle);
+            enemies.add(enemy);
+        }
+//        enemy = new Enemy(6, 3, nodeSize, grid, grid[player.col][player.row], Color.ORANGE);
+//        field.getChildren().add(enemy.circle);
+//        enemies.add(enemy);
+
+        attachObserverToEnemies(new EventBoxObserver(eventBox));
+        attachObserverToEnemies(new SelectedEnemyObserver(enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane));
+        attachObserverToEnemies(new PlayerStatObserver(playerHealthDisplay, playerArmorDisplay));
+
+    }
+
+    /**
+     * Finds a tile to spawn an enemy on when generating a room
+     * @return [x,y] coordinate of a tile
+     */
+    private int[] generateCoordinate() {
+        int[] coordinates = new int[2];
+
+        return null;
     }
 
     public void attachObserverToPlayer(Observer o) {
         player.attach(o);
-    }
-
-    private void addEnemies(TextArea eventBox, Text enemyHealthDisplay, Text enemyArmorDisplay, Pane selectedEnemyPane) {
-        Enemy enemy = new Enemy(6, 6, nodeSize, grid, grid[player.col][player.row], Color.RED);
-        field.getChildren().add(enemy.circle);
-        enemies.add(enemy);
-        enemy = new Enemy(6, 3, nodeSize, grid, grid[player.col][player.row], Color.ORANGE);
-        field.getChildren().add(enemy.circle);
-        enemies.add(enemy);
-
-        attachObserverToEnemies(new EventBoxObserver(eventBox));
-        attachObserverToEnemies(new SelectedEnemyObserver(enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane));
     }
 
     public void attachObserverToEnemies(Observer o) {
@@ -107,15 +121,33 @@ public class DungeonGenerator {
 
     public void movePlayer(int col, int row) {
         if (!grid[col][row].solid && !grid[col][row].hasEnemy)
-            player.move(col, row, null);
+            player.move(col, row, null, field);
         else if (grid[col][row].hasEnemy) {
             for (Entity enemy : enemies) {
                 if (enemy.col == col && enemy.row == row) {
-                    player.move(col, row, enemy);
+                    player.move(col, row, enemy, field);
                     break;
                 }
             }
         }
+    }
+
+    /**
+     * Loops through the entities in the enemies list and moves each entity,
+     * removing any entities that are dead
+     * @param actionEvent unused
+     */
+    private void moveEnemies(ActionEvent actionEvent) {
+        Entity removed = null;
+        for (Entity enemy : enemies) {
+            if (enemy.health > 0) {
+                enemy.move(player.col, player.row, player, field);
+            } else {
+                //Removes dead enemies from the list
+                removed = enemy;
+            }
+        }
+        enemies.remove(removed);
     }
 
     public void initializeEnemies() {
@@ -124,17 +156,5 @@ public class DungeonGenerator {
         timeline.play();
     }
 
-    private void moveEnemies(ActionEvent actionEvent) {
-        Entity removed = null;
-        for (Entity enemy : enemies) {
-            if (enemy.health > 0) {
-                enemy.move(player.col, player.row, player);
-            } else {
-                enemy.die(field);
-                removed = enemy;
-            }
-        }
-        enemies.remove(removed);
-    }
 }
 

@@ -17,7 +17,11 @@ public class SelectedEnemyObserver implements Observer{
     @Override
     public void update(Entity entity, String message) {
         if (entity != null) {
-            enemyHealthDisplay.setText("H: " + entity.health);
+            if (entity.health < 0) {
+                enemyHealthDisplay.setText("H: " + 0);
+            } else {
+                enemyHealthDisplay.setText("H: " + entity.health);
+            }
             enemyArmorDisplay.setText("A: " + entity.armor);
             selectedEnemyPane.getChildren().removeAll();
             selectedEnemyPane.getChildren().add(new Circle(75, 50, 50, entity.circle.getFill()));

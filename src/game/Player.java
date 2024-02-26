@@ -6,8 +6,7 @@ import javafx.scene.shape.Circle;
 
 
 public class Player extends Entity {
-    private Pane field;
-    public Player(int col, int row, double size, Pane field) {
+    public Player(int col, int row, double size) {
         this.col = col;
         this.row = row;
 
@@ -22,7 +21,12 @@ public class Player extends Entity {
 
     }
 
-    public void move(int col, int row, Entity target) {
+    @Override
+    public void damage(int damage) {
+
+    }
+
+    public void move(int col, int row, Entity target, Pane field) {
         if (target == null) {
             this.col = col;
             this.row = row;
@@ -30,9 +34,10 @@ public class Player extends Entity {
             circle.setCenterY((row * nodeSize) + nodeSize / 2);
         } else {
             if (!target.isDead()) {
-                target.health = target.health - 4;
+                target.damage(4);
                 notifyObservers(null, "Enemy attacked for 4hp\n");
                 if (target.health < 0) {
+                    target.die(field);
                     notifyObservers(null, "An enemy has been defeated!\n");
                 }
             }

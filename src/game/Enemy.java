@@ -36,7 +36,7 @@ public class Enemy extends Entity {
     private void onClick(MouseEvent e) {
         notifyObservers(this, null);
     }
-    public void move(int col, int row, Entity target) {
+    public void move(int col, int row, Entity target, Pane field) {
         nodes[this.col][this.row].hasEnemy = false;
         setStartNode(this.col, this.row);
         setGoalNode(col, row);
@@ -49,7 +49,15 @@ public class Enemy extends Entity {
             this.col = nextNode.col;
             this.row = nextNode.row;
         } else {
-        //Add function call to damage player here
+            if (!target.isDead()) {
+                target.damage(1);
+                notifyObservers(null, "Enemy attacked for 4hp\n");
+                if (target.health < 0) {
+                    target.die(field);
+                    notifyObservers(null, "An enemy has been defeated!\n");
+                }
+            }
+            notifyObservers(null, "Player hit\n");
         }
         nodes[this.col][this.row].hasEnemy = true;
 
@@ -63,6 +71,12 @@ public class Enemy extends Entity {
     public void die(Pane field) {
         nodes[col][row].hasEnemy = false;
         field.getChildren().remove(circle);
+    }
+
+    @Override
+    public void damage(int damage) {
+        health = health - damage;
+        notifyObservers(this, null);
     }
 
     public Node autoSearch() {

@@ -13,8 +13,9 @@ public abstract class Entity extends Subject {
     private boolean isDead = false;
 
 
-    abstract void move(int col, int row, Entity target);
+    abstract void move(int col, int row, Entity target, Pane field);
     public abstract void die(Pane field);
+    public abstract void damage(int damage);
 
     public boolean isDead() {
         return isDead;

@@ -1,6 +1,15 @@
-THINGS TO IMPLEMENT:
+GAMEPLAY LOOP
+- Player selects a unit which highlights all the squares that unit can attack
+- player selects a valid square and damages any enemies on that square
+- repeats process for each unit
+- once player has completed their turn enemy units move
 
-- Player can die
-- Way to restart game back to beginning
-- Random room generation
-- dungeon generation (multiple connected rooms
+TO-DO
+- implement simple player unit that can attack in a radius 3 circle
+- implement simple player unit that has a more unit attack range
+
+- implement simple enemy unit that has a simple attack range and pattern
+
+THINGS TO IMPROVE
+- generate non static map with custom tiles
+    - water, mountain, mud/swamp, DoT tiles (Damage over time)
