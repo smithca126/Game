@@ -12,7 +12,7 @@ public class Node {
     public final int col, row;
 
     //Flags for the different node states
-    public boolean start, goal, solid, hasEnemy;
+    public boolean start, goal, solid, hasEnemy, moveTo, confirmed;
 
     //Flags used for the A* algorithm
     public boolean open, checked;
@@ -21,29 +21,25 @@ public class Node {
     public int gCost, hCost, fCost;
     public Node parent;
     public Rectangle rec;
-    public Text text;
 
     public Node(int col, int row, double size) {
         this.col = col;
         this.row = row;
+
         rec = new Rectangle(col * size + 0.5, row * size + 0.5, 39, 39);
-        text = new Text(col * size + 2, row * size + 25, "");
-        text.setFont(Font.font("Verdana", 8));
         rec.setFill(Color.WHITE);
-
         rec.setOnMouseClicked(this::onClick);
-        text.setOnMouseClicked(this::onClick);
-
         rec.setFocusTraversable(false);
-        text.setFocusTraversable(false);
     }
 
     private void onClick(MouseEvent e) {
-        if (solid) {
-            solid = false;
-            rec.setFill(Color.WHITE);
+        if (moveTo) {
+//            rec.setFill(Color.WHITE);
+            moveTo = false;
+            confirmed = true;
         } else {
-            setAsSolid();
+//            rec.setFill(Color.GREEN);
+            moveTo = true;
         }
     }
 
@@ -88,7 +84,6 @@ public class Node {
 
     public void resetNode() {
         rec.setFill(Color.WHITE);
-        text.setText("");
         start = false;
         goal = false;
         solid = false;
@@ -102,4 +97,5 @@ public class Node {
     public void setAsPath() {
         rec.setFill(Color.GREEN);
     }
+
 }

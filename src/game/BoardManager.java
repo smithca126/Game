@@ -15,7 +15,7 @@ import observer_pattern.SelectedEnemyObserver;
 
 import java.util.ArrayList;
 
-public class DungeonManager {
+public class BoardManager {
     private final int nodeSize;
     private final Pane field;
     public Player player;
@@ -25,7 +25,7 @@ public class DungeonManager {
 
     private Node[][] grid;
 
-    public DungeonManager(int nodeSize, Pane field) {
+    public BoardManager(int nodeSize, Pane field) {
         this.nodeSize = nodeSize;
         this.field = field;
     }
@@ -37,7 +37,7 @@ public class DungeonManager {
 
         addPlayer(eventBox);
 
-        addEnemies(1, eventBox, enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane, playerHealthDisplay, playerArmorDisplay);
+//        addEnemies(1, eventBox, enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane, playerHealthDisplay, playerArmorDisplay);
 
     }
 
@@ -48,7 +48,7 @@ public class DungeonManager {
         while (col < maxColumns && row < maxRows) {
             Node node = new Node(col, row, nodeSize);
             grid[col][row] = node;
-            field.getChildren().addAll(node.rec, node.text);
+            field.getChildren().addAll(node.rec);
             col++;
             if (col == maxColumns) {
                 col = 0;
@@ -76,28 +76,28 @@ public class DungeonManager {
 
     private void addPlayer(TextArea eventBox) {
         //Spawn the player
-        player = new Player(3, 6, nodeSize);
+        player = new Player(3, 6, nodeSize, grid);
         field.getChildren().add(player.circle);
         attachObserverToPlayer(new EventBoxObserver(eventBox));
         player.notifyObservers(player, null);
     }
 
-    private void addEnemies(int num, TextArea eventBox, Text enemyHealthDisplay, Text enemyArmorDisplay,
-                            Pane selectedEnemyPane, Text playerHealthDisplay, Text playerArmorDisplay) {
-        for (int i = 0; i < num; i++) {
-            Enemy enemy = new Enemy(6, i + 6, nodeSize, grid, grid[player.col][player.row], Color.RED);
-            field.getChildren().add(enemy.circle);
-            enemies.add(enemy);
-        }
+//    private void addEnemies(int num, TextArea eventBox, Text enemyHealthDisplay, Text enemyArmorDisplay,
+//                            Pane selectedEnemyPane, Text playerHealthDisplay, Text playerArmorDisplay) {
+//        for (int i = 0; i < num; i++) {
+//            Enemy enemy = new Enemy(6, i + 6, nodeSize, grid, grid[player.col][player.row], Color.RED);
+//            field.getChildren().add(enemy.circle);
+//            enemies.add(enemy);
+//        }
 //        enemy = new Enemy(6, 3, nodeSize, grid, grid[player.col][player.row], Color.ORANGE);
 //        field.getChildren().add(enemy.circle);
 //        enemies.add(enemy);
-
-        attachObserverToEnemies(new EventBoxObserver(eventBox));
-        attachObserverToEnemies(new SelectedEnemyObserver(enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane));
-        attachObserverToEnemies(new PlayerStatObserver(playerHealthDisplay, playerArmorDisplay));
-
-    }
+//
+//        attachObserverToEnemies(new EventBoxObserver(eventBox));
+//        attachObserverToEnemies(new SelectedEnemyObserver(enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane));
+//        attachObserverToEnemies(new PlayerStatObserver(playerHealthDisplay, playerArmorDisplay));
+//
+//    }
 
     /**
      * Finds a tile to spawn an enemy on when generating a room

@@ -18,7 +18,7 @@ public class Controller {
     @FXML
     private Pane field;
     private final int nodeSize = 40;
-    DungeonManager dungeonGenerator;
+    BoardManager dungeonGenerator;
 
     /**
      * initializes the window
@@ -34,7 +34,7 @@ public class Controller {
         eventBox.setFocusTraversable(false);
         eventBox.setWrapText(true);
 
-        dungeonGenerator = new DungeonManager(nodeSize, field);
+        dungeonGenerator = new BoardManager(nodeSize, field);
         dungeonGenerator.createRoom(15, 10, eventBox, playerHealthDisplay, playerArmorDisplay, enemyHealthDisplay, enemyArmorDisplay, selectedEnemyPane);
         dungeonGenerator.initializeEnemies();
 
